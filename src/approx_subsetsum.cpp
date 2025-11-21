@@ -9,7 +9,7 @@ namespace py = pybind11;
 // --- 1. The Core Templated Function ---
 // This function is called by both the NumPy array and Python list handlers.
 template<typename T>
-py::array_t<std::uint32_t> foo_impl(const T* data, py::ssize_t size, std::uint32_t capacity) {
+py::array_t<std::uint32_t> subsetsum_impl(const T* data, py::ssize_t size, std::uint32_t capacity) {
     // dp[s] = index of element last used to reach sum s
     // -1 = unreachable, -2 = base for sum 0
     std::vector<int> dp(capacity+1, -1);
@@ -74,7 +74,7 @@ py::array_t<std::uint32_t> process_numpy_array(py::array_t<T> array, std::uint32
     py::ssize_t size = array.size();
 
     // Call the core templated function
-    return foo_impl<T>(data_ptr, size, capacity);
+    return subsetsum_impl<T>(data_ptr, size, capacity);
 }
 
 // --- 3. The main Python-facing function (Type Switch) ---
@@ -116,7 +116,7 @@ py::array_t<std::uint32_t> subsetsum(py::object data, std::uint32_t capacity) {
         py::ssize_t size = py::len(lst);
         
         // **List Handling:** We must convert the Python list elements to a standard C++ type (e.g., double)
-        // to get a contiguous data pointer needed by foo_impl. This involves a copy/conversion.
+        // to get a contiguous data pointer needed by subsetsum_impl. This involves a copy/conversion.
         std::vector<double> cpp_vector;
         cpp_vector.reserve(size);
 
@@ -130,7 +130,7 @@ py::array_t<std::uint32_t> subsetsum(py::object data, std::uint32_t capacity) {
         }
         
         // Call the core templated function using the vector's data pointer
-        return foo_impl<double>(cpp_vector.data(), size, capacity);
+        return subsetsum_impl<double>(cpp_vector.data(), size, capacity);
     }
     else {
         throw py::value_error("Input must be a NumPy array or a Python list.");
