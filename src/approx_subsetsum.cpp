@@ -3,6 +3,7 @@
 #include <vector>
 #include <iostream>
 #include <exception>
+#include <chrono>
 
 namespace py = pybind11;
 
