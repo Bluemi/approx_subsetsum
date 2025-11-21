@@ -2,7 +2,6 @@
 #include <pybind11/numpy.h>
 #include <vector>
 #include <iostream>
-#include <stdexcept>
 
 namespace py = pybind11;
 
@@ -17,7 +16,7 @@ py::array_t<std::uint32_t> subsetsum_impl(const T* data, py::ssize_t size, std::
 
 	for (py::ssize_t i = 0; i < size; i++) {
 		T w = data[i];
-		if (w > capacity)
+		if (w > static_cast<T>(capacity))
 			continue;
 		for (py::ssize_t s = capacity - w; s >= 0; s--) {
 			if (dp[s] != -1 && dp[s + w] == -1) {
@@ -26,19 +25,21 @@ py::array_t<std::uint32_t> subsetsum_impl(const T* data, py::ssize_t size, std::
 		}
 	}
 
-    // best achievable sum <= capacity
-    T best = -1;
+  // best achievable sum <= capacity
+  T best = 0;
+  bool found = false;
 	for (py::ssize_t s = capacity; s >= 0; s--) {
 		if (dp[s] != -1) {
 			best = s;
+      found = true;
 			break;
 		}
 	}
 
 	std::vector<std::uint32_t> indices;
-	if (best == -1) {
+	if (!found) {
 		auto res = py::array_t<std::uint32_t>(
-			{0}, 
+			{0},
 			indices.data(), 
 			py::capsule()
 		);
@@ -46,7 +47,7 @@ py::array_t<std::uint32_t> subsetsum_impl(const T* data, py::ssize_t size, std::
 		return py::cast(indices);
 	}
 
-    // reconstruct indices
+  // reconstruct indices
 	T s = best;
 	while (s != 0) {
 		int i = dp[s];
