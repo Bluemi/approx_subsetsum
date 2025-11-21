@@ -14,7 +14,7 @@ double sum_array(py::array_t<double, py::array::c_style | py::array::forcecast> 
     return s;
 }
 
-PYBIND11_MODULE(mylib, m) {
+PYBIND11_MODULE(approx_subsetsum, m) {
     m.doc() = "Example pybind11 module exposing a NumPy-taking function";
 
     m.def("sum_array", &sum_array, "Return the sum of a 1D NumPy array of float64");
