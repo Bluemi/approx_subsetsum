@@ -64,5 +64,8 @@ jobs:
           pattern: release-dists-*
           merge-multiple: true
 
+      - name: Display structure of downloaded files
+        run: ls -hAlt dist
+
       - name: Publish release distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
