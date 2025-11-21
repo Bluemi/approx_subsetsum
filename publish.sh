@@ -14,10 +14,14 @@ echo "old version: $old_version"
 read -p 'new version> ' new_version
 
 # compare versions
-# if [ "$old_version" = "$new_version" ]; then
-# 	echo "ERROR: current version equals old version"
-# 	exit 0
-# fi
+if [ "$old_version" = "$new_version" ]; then
+	echo "ERROR: current version equals old version"
+	exit 0
+fi
+
+# update pyproject.toml
+sed -i "s@^version = \".*\"@version = \"$new_version\"@" "pyproject.toml"
+
 
 # publish package
 git add -A && git commit -m "v$new_version"
