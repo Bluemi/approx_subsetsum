@@ -14,14 +14,19 @@ Given an integer numpy array `samples`, this function tries to find a subset of 
 import numpy as np
 from approx_subsetsum import subsetsum
 
-samples = np.array([1, 2, 3, 4, 5])
-capacity = 7
-indices = subsetsum(samples, capacity)
-solution = samples[indices]
-if np.sum(solution) == capacity:
-    print('found perfect solution')
-else:
-    print('solution is off by', abs(np.sum(solution) - capacity))
+def main():
+    samples = np.array([1, 2, 3, 4, 5])
+    capacity = 7
+    try:
+        indices = subsetsum(samples, capacity, timeout=10.0)
+    except TimeoutError:
+        print('timeout')
+        return
+    solution = samples[indices]
+    if np.sum(solution) == capacity:
+        print('found perfect solution')
+    else:
+        print('solution is off by', abs(np.sum(solution) - capacity))
 ```
 
 ## Performance
