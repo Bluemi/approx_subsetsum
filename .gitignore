@@ -1,6 +1,8 @@
 /venv
 /compile.sh
 
+__pycache__
+
 *.egg-info
 
 # Prerequisites
