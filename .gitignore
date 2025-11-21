@@ -1,6 +1,7 @@
 /.idea
 /venv
 /compile.sh
+/wheelhouse
 
 __pycache__
 
