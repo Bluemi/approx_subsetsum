@@ -11,7 +11,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "approx_subsetsum"
 dynamic = ["version"]
-dependencies = []
+dependencies = [
+	"numpy>=2.0"
+]
 requires-python = ">= 3.10"
 authors = [
     {name = "Bruno Schilling", email = "bruno.schilling@htw-berlin.de"}
