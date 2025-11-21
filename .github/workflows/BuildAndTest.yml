@@ -3,12 +3,6 @@ name: BuildAndTest
 on:
   workflow_dispatch:
 
-env:
-  # The default image might be too new or inherit host dependencies.
-  # Explicitly setting a stable, older manylinux image usually resolves
-  # the "too-recent versioned symbols" error by constraining the glibc used during compilation.
-  CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
-
 jobs:
   build:
     strategy:
@@ -33,8 +27,6 @@ jobs:
     - name: Build Packages
       run: cibuildwheel --output-dir "dist"
       env:
-        CIBW_ARCHS: auto64
-        CIBW_BUILD_FRONTEND: "pip; args: --verbose"
         CIBW_SKIP: "cp314t-* cp314-* pp*win*"
 
   build_sdist:
