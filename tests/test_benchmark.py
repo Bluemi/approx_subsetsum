@@ -43,8 +43,7 @@ def test_benchmark_no_solution():
 
 
 def main():
-    benchmark_no_solution(subsetsum)
-    benchmark_no_solution(subset_sum_closest)
+    test_benchmark_no_solution()
 
 
 if __name__ == '__main__':
