@@ -31,6 +31,7 @@ py::array_t<std::uint32_t> subsetsum_impl(const T *data, py::ssize_t size, std::
       continue;
     std::vector<std::tuple<std::uint64_t, py::ssize_t>> changes;
     for (auto [s, _]: dp) {
+      if (s > capacity - w) continue;
       if (timeout > 0.f && s % 1048576 == 0) {
         auto curr_time = std::chrono::high_resolution_clock::now();
         if (std::chrono::duration_cast<std::chrono::milliseconds>(curr_time - start_time).count() > timeout * 1000) {
