@@ -22,23 +22,28 @@ py::array_t<std::uint32_t> subsetsum_impl(const T *data, py::ssize_t size, std::
 
   // dp[s] = index of element last used to reach sum s
   // -1 = unreachable, -2 = base for sum 0
-  std::vector<std::uint64_t> dp(capacity + 1, -1);
+  std::unordered_map<std::uint64_t, std::int64_t> dp;
   dp[0] = -2;
 
   for (py::ssize_t i = 0; i < size; i++) {
     T w = data[i];
     if (w > static_cast<T>(capacity))
       continue;
-    for (py::ssize_t s = capacity - w; s >= 0; s--) {
+    std::vector<std::tuple<std::uint64_t, py::ssize_t>> changes;
+    for (auto [s, _]: dp) {
       if (timeout > 0.f && s % 1048576 == 0) {
         auto curr_time = std::chrono::high_resolution_clock::now();
         if (std::chrono::duration_cast<std::chrono::milliseconds>(curr_time - start_time).count() > timeout * 1000) {
           throw TimeoutException();
         }
       }
-      if (dp[s] != -1 && dp[s + w] == -1) {
-        dp[s + w] = i;
+      auto search2 = dp.find(s + w);
+      if (search2 == dp.end()) {
+        changes.push_back({s + w, i});
       }
+    }
+    for (auto change : changes) {
+      dp[std::get<0>(change)] = std::get<1>(change);
     }
   }
 
@@ -46,8 +51,9 @@ py::array_t<std::uint32_t> subsetsum_impl(const T *data, py::ssize_t size, std::
   T best = 0;
   bool found = false;
   for (py::ssize_t s = capacity; s >= 0; s--) {
-    if (dp[s] != -1) {
-      best = s;
+    auto search = dp.find(s);
+    if (search != dp.end()) {
+      best = search->first;
       found = true;
       break;
     }
