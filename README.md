@@ -44,7 +44,6 @@ def bench(n_samples, capacity):
 ```
 
 The plot shows the runtime depending on the number of samples and the capacity.
-As you can see the algorithm is not optimized for large capacities, but scales well with the number of samples.
 ![Plot visualizing the runtime](images/plot.png)
 *Note: The algorithm timed out after 10 seconds.*
 
