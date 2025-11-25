@@ -16,13 +16,19 @@ from approx_subsetsum import subsetsum
 
 samples = np.array([1, 2, 3, 4, 5])
 capacity = 7
-indices = subsetsum(samples, capacity, timeout=10.0)
+indices = subsetsum(samples, capacity, timeout=10.0, allow_higher=100)
 solution = samples[indices]
 if np.sum(solution) == capacity:
     print('found solution')
 else:
     print('solution is off by', abs(np.sum(solution) - capacity))
 ```
+
+### Parameters
+- `samples`: The input array of integers. Fastest if given as numpy array (no copy). Otherwise the data will be copied.
+- `capacity`: The target sum as integer. High capacities can lead to high memory usage and runtime.
+- `timeout`: The maximum runtime in seconds. If the algorithm does not find a solution within this time, it throws a `approx_subsetsum.TimeoutError`.
+- `allow_higher`: If set to a positive integer, the algorithm will also try to find a solution higher than `capacity` (up to `capacity + allow_higher`). Note that setting `allow_higher` to a large value can hurt performance.
 
 ## Performance
 The algorithm is not well optimized, but at least implemented in C++.
