@@ -53,8 +53,19 @@ def test_benchmark_no_solution2():
     print(f'sum={summe}  capacity={capacity}  time={end_time - start_time:.3f}')
 
 
+def test_benchmark_empty():
+    samples = np.array([])
+    capacity = 4
+    start_time = time.time()
+    res = subsetsum(samples, capacity, allow_higher=4)
+    end_time = time.time()
+    solution = samples[res]
+    summe = np.sum(solution)
+    print(f'sum={summe}  capacity={capacity}  time={end_time - start_time:.3f}')
+
+
 def main():
-    test_benchmark_no_solution2()
+    test_benchmark_empty()
 
 
 if __name__ == '__main__':

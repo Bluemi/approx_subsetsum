@@ -18,6 +18,9 @@ public:
 // This function is called by both the NumPy array and Python list handlers.
 template<typename T>
 py::array_t<std::uint32_t> subsetsum_impl(const T *data, py::size_t size, std::uint32_t capacity, const float timeout, const std::int32_t allow_higher) {
+  if (size == 0 || capacity == 0) {
+    return py::array_t<std::uint32_t>(0, nullptr, py::capsule());
+  }
   const long timeout_millis = static_cast<long>(timeout * 1000.f);
   auto start_time = std::chrono::high_resolution_clock::now();
 
@@ -52,13 +55,14 @@ py::array_t<std::uint32_t> subsetsum_impl(const T *data, py::size_t size, std::u
   T best = 0;
   bool found = false;
   for (py::ssize_t s = 0; s < capacity; s++) {
-    const T target_index_low = capacity - s;
+    const py::ssize_t target_index_low = static_cast<py::ssize_t>(capacity) - s;
     if (dp[target_index_low] != -1) {
       best = target_index_low;
       found = true;
       break;
-    } else if (allow_higher > 0) {
-      const T target_index_high = capacity + s;
+    }
+    if (allow_higher > 0) {
+      const py::ssize_t target_index_high = static_cast<py::ssize_t>(capacity) + s;
       if (target_index_high < total && dp[target_index_high] != -1) {
         best = target_index_high;
         found = true;
@@ -67,12 +71,12 @@ py::array_t<std::uint32_t> subsetsum_impl(const T *data, py::size_t size, std::u
     }
   }
 
-  std::vector<std::uint32_t> indices;
   if (!found) {
     throw std::runtime_error("Failed to find solution.");
   }
 
   // reconstruct indices
+  std::vector<std::uint32_t> indices;
   T s = best;
   while (s != 0) {
     int i = dp[s];
