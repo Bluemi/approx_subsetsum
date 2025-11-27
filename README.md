@@ -47,7 +47,8 @@ The plot shows the runtime depending on the number of samples and the capacity.
 ![Plot visualizing the runtime](images/plot.png)
 *Note: The algorithm timed out after 10 seconds.*
 
-The following table shows an overview of the runtimes (of course, this depends on the hardware).
+The following table shows an overview of the runtimes.
+Of course, this depends on many things but can be used to get an idea of the performance.
 
 | #samples | capacity | runtime    |
 |----------|----------|------------|
