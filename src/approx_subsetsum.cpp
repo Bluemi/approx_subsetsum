@@ -44,6 +44,8 @@ py::array_t<std::uint32_t> subsetsum_impl(const T *data, py::size_t size, std::u
         if (std::chrono::duration_cast<std::chrono::milliseconds>(curr_time - start_time).count() > timeout_millis) {
           throw TimeoutException();
         }
+        if (PyErr_CheckSignals() != 0)
+          throw py::error_already_set();
       }
       if (dp[s] != -1 && dp[s + w] == -1) {
         dp[s + w] = i;
@@ -87,6 +89,8 @@ py::array_t<std::uint32_t> subsetsum_impl(const T *data, py::size_t size, std::u
     if (timeout_millis > 0 && std::chrono::duration_cast<std::chrono::milliseconds>(curr_time - start_time).count() > timeout_millis) {
       throw TimeoutException();
     }
+    if (PyErr_CheckSignals() != 0)
+      throw py::error_already_set();
   }
 
   return py::array_t<std::uint32_t>(static_cast<py::ssize_t>(indices.size()), indices.data(), py::capsule());
